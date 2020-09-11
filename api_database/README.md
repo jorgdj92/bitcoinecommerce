@@ -9,6 +9,7 @@ touch  config.json
 ```
 ###  Example
 config.json
+
 ```
 {
   "type": "",
