@@ -7,7 +7,9 @@ mkdir config
 cd config
 touch  config.json
 ```
-###  Example
+
+### Example
+
 config.json
 
 ```
@@ -25,21 +27,23 @@ config.json
 }
 
 ```
+
 ### rename
 
-.env.example | .env
+cp .env.example  .env
 
 ### Endpoints
 
-| Method | Path           | Data                                                          | Description              | Requires authorization | Cache | Services | External Services |
-| :----- | :------------- | ------------------------------------------------------------- | :----------------------- | :--------------------- | :---- | :------- | :---------------- |
-| `POST` | `api/user`     | `id*,email *,password*,name*,lastname*,photoURL,phoneNumber` | Create user for Firebase | `No`                   | `No`  | Firebase | Cloud Firestore   |
-| `GET`  | `api/user{email}` | N/A                                                           | Get user for Firebase    | `No`                   | `No`  | Firebase | Cloud Firestore   |
-| `PUT`  | `api/user{id}` | `{name,lastname,password,email} aun no esta`                              | Update user for Firebase | `No`                   | `No`  | Firebase | Cloud Firestore   |
+| Method | Path              | Data                                                         | Description              | Requires authorization | Cache | Services | External Services |
+| :----- | :---------------- | ------------------------------------------------------------ | :----------------------- | :--------------------- | :---- | :------- | :---------------- |
+| `POST` | `api/user`        | `id*,email *,password*,name*,lastname*,photoURL,phoneNumber` | Create user for Firebase | `No`                   | `No`  | Firebase | Cloud Firestore   |
+| `GET`  | `api/user{email}` | N/A                                                          | Get user for Firebase    | `No`                   | `No`  | Firebase | Cloud Firestore   |
+| `PUT`  | `api/user{id}`    | `{name,lastname,password,email} aun no esta`                 | Update user for Firebase | `No`                   | `No`  | Firebase | Cloud Firestore   |
 
 ## errors
 
 ### User
+
 201 data exist
 
 ```
@@ -50,5 +54,3 @@ config.json
         }
 }
 ```
-
-**\*Nomenclatura:** {Service} - {Method}
