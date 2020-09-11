@@ -2,5 +2,5 @@
 
 ## Project Structure
 
-### [Api Database ](api-bitcoin-tesnet/README.md)
-### [Api Bitcoin ](api-database/README.md)
+### [Api Database ](api-bitcoin-tesnet/)
+### [Api Bitcoin ](api-database/)
