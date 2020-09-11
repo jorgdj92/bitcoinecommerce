@@ -1,21 +1,32 @@
 const bitcoin = require("bitcoinjs-lib");
+const apiDB = require("../../utils/apidb");
+
 const TestNet = bitcoin.networks.testnet;
 
-exports.createWallet = (req, res) => {
-//generate the key pair using the makeRandom functions (there a bunch of ways to make an address btw)
-let keyPair = bitcoin.ECPair.makeRandom({ network: TestNet });
-//extract the publickey
-let publicKey = keyPair.publicKey;
-//get the private key
-let privateKey = keyPair.toWIF();
-//get an address from the keyPair we generated above.
-let { address } = bitcoin.payments.p2pkh({
-  pubkey: publicKey,
-  network: TestNet
-});
+exports.createWallet = async (req, res) => {
+  let keyPair = bitcoin.ECPair.makeRandom({ network: TestNet });
+  let publicKey = keyPair.publicKey;
+  let privateKey = keyPair.toWIF();
+  let { address } = bitcoin.payments.p2pkh({
+    pubkey: publicKey,
+    network: TestNet,
+  });
 
+  let user = await apiDB.getData("/api/user", {
+    email: req.objects.data.email,
+  });
 
-console.log("Pay me f00l " + address);
-res.json({ address : address })
-}
+  let data = {
+    id: user.uid,
+    address: address,
+    privatekey: privateKey,
+    publickey: publicKey,
+  };
 
+  try {
+    let result = await apiDB.create("/api/wallet", data);
+    res.json({ address: address });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};

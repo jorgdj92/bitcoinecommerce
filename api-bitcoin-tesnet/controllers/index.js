@@ -1,3 +1,4 @@
-const wallet  = require('./wallet/wallet')
+const index = require("../middlewares/index");
+const wallet = require("./wallet/wallet");
 
-exports.createWallet = [wallet.createWallet ];
+exports.createWallet = [index.validateData, wallet.createWallet];

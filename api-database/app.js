@@ -6,12 +6,13 @@ require('dotenv/config');
 
 var port = process.env.PORT || 4000;
 
-var userRouter = require('./routes/user');
+var routes = require('./routes/index');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use('/api', userRouter);
+app.use('/api', routes);
+
 app.get('/',(req,res) => {
     res.json({ message: "Api Auth" })
 });
