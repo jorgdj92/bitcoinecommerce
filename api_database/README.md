@@ -52,5 +52,3 @@ config.json
 ```
 
 **\*Nomenclatura:** {Service} - {Method}
-
-Daniel Galvan ©
