@@ -49,9 +49,19 @@ async function getInfoWallet(req,res){
   }
 }
 
+async function createTransfer(req,res){
+  try {
+    let result = await apiBlockCypher.createTransfer(req.objects.data.addressFrom,req.objects.data.addressTo,req.objects.data.amount);
+    res.json(result)
+  } catch (error) {
+    return error
+  }
+}
+
 
 module.exports= {
   createWallet,
   getInfoWallet,
-  foundWalletEmail
+  foundWalletEmail,
+  createTransfer
 }
