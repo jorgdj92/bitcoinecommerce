@@ -1,36 +1,44 @@
-const bitcoin = require("bitcoinjs-lib");
 const apiBlockCypher= require('../../utils/apiBlockCypher')
 const apiDB = require("../../utils/apidb");
 
-const tesnet = bitcoin.networks.testnet;
-
-async function createWallet(req, res) {
-  let keyPair = bitcoin.ECPair.makeRandom({ network: tesnet });
-  let publicKey = keyPair.publicKey;
-  let privateKey = keyPair.toWIF();
-  let { address } = bitcoin.payments.p2pkh({
-    pubkey: publicKey,
-    network: tesnet,
-  });
-
-  let user = await apiDB.getData("/api/user", {
-    email: req.objects.data.email,
-  });
-
-  let data = {
-    id: user.uid,
-    address: address,
-    privatekey: privateKey,
-    publickey: publicKey,
-  };
-
+async function createWallet(req,res){
   try {
+    let newAddress =  await apiBlockCypher.createAddress();
+    let user = await apiDB.getData("/api/user", {
+      email: req.objects.data.email,
+    });
+
+    let data = {
+      id: user.uid,
+      address: newAddress.data.address,
+      privatekey: newAddress.data.private,
+      publickey: newAddress.data.public,
+      wif: newAddress.data.wif
+
+    };
     let result = await apiDB.create("/api/wallet", data);
-    res.json({ address: address });
+    res.json({ address: newAddress.data.address });
+
+    console.log(newAddress)
+    res.json(newAddress.data)
   } catch (error) {
-    res.status(400).json(error);
+    return res.status(400).json(error)
   }
-};
+}
+
+async function foundWalletEmail(req,res){
+  try {
+    let wallet = await apiDB.getData("/api/wallet", {
+      email: req.objects.data.email,
+    });
+
+    let tx  =  await apiBlockCypher.foundWallet(wallet.address,req.objects.data.amount)
+    res.json(tx)
+  } catch (error) {
+    return res.status(400).json(error)
+  }
+
+}
 
 async function getInfoWallet(req,res){
   try {
@@ -39,31 +47,11 @@ async function getInfoWallet(req,res){
   } catch (error) {
     res.status(400).json(error)
   }
-  
 }
 
-async function createTransaction(){
-let transaction =  new bitcoin.TransactionBuilder(tesnet);
-let transactionId = ""
-let outn =0;
-
-transaction.addInput(transactionId,outn);
-transaction.addOutput("Address",323)
-
-let WIF = ""
-let keyPairSpend = bitcoin.ECPair.fromWIF(WIF,tesnet)
-//firmas tran
-
-transaction.sign(0,keyPairSpend);
-
-let tx = transaction.build();
-let txhex = transaction.toHex();
-console.log(txhex)
-
-}
 
 module.exports= {
   createWallet,
   getInfoWallet,
-  createTransaction
+  foundWalletEmail
 }

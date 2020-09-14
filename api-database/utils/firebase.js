@@ -22,6 +22,17 @@ class Firebase {
       return error
     }
   }
+
+  async getData(id) {
+    let docRef = await this.table.doc(id);
+      try {
+        let getData = await docRef.get();
+        return getData.data()
+      } catch (error) {
+        return error
+      }
+    }
+
   async createUser(data) {
     try {
       let result = await admin.auth().createUser({
