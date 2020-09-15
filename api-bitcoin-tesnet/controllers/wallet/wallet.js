@@ -58,10 +58,13 @@ async function createTransfer(req,res){
   }
 }
 
+async function buyProduct(req,res){
+}
 
 module.exports= {
   createWallet,
   getInfoWallet,
   foundWalletEmail,
-  createTransfer
+  createTransfer,
+  buyProduct
 }
