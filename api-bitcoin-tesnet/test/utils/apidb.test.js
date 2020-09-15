@@ -1,13 +1,7 @@
-const apiBd = require("../../utils/apidb");
-const axios = require("axios");
+const apiBd = require('../../utils/apidb');
 
-jest.mock("axios");
+it('call axios un method DB ', () => {
+    const  servicesCreate = apiBd.getData("/api/user",{email: "jorge@gmail.com"})
+    console.log(servicesCreate)
 
-describe("Test api DB firebase ", () => {
-    it("Create Api test", async () => {
-        let path = "";
-        let data = {};
-        const getData = await apiBd.getData(path, data);
-        console.log(getData);
-    });
 });
