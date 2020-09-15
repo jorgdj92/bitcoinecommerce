@@ -9,7 +9,8 @@ exports.createWallet=[
 ]
 
 exports.getWallet=[
-
+    index.validateData,
+    wallet.getWallet
 ]
 
 // Users

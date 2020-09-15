@@ -8,7 +8,8 @@ async function createWallet(req, res) {
         let data = {
             address: req.objects.data.address,
             privateKey:req.objects.data.privatekey,
-            publicKey:req.objects.data.publickey
+            publicKey:req.objects.data.publickey,
+            wif: req.objects.data.wif
         }
         let walletResult = await firebase.create(req.objects.data.id,data);
         res.json({ result: true,mesage: walletResult})
@@ -18,6 +19,20 @@ async function createWallet(req, res) {
     }
 }
 
+async function getWallet (req,res){
+    try {
+        let user = await firebase.getUser(req.objects.data.email);
+        let wallet =  await firebase.getData(user.uid);
+        return res.json(wallet)
+
+    } catch (error) {
+        return error
+    }
+
+}
+
 module.exports = {
     createWallet,
+    getWallet
+    
 };

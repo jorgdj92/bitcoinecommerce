@@ -1,32 +1,67 @@
-const bitcoin = require("bitcoinjs-lib");
+const apiBlockCypher= require('../../utils/apiBlockCypher')
 const apiDB = require("../../utils/apidb");
 
-const TestNet = bitcoin.networks.testnet;
-
-exports.createWallet = async (req, res) => {
-  let keyPair = bitcoin.ECPair.makeRandom({ network: TestNet });
-  let publicKey = keyPair.publicKey;
-  let privateKey = keyPair.toWIF();
-  let { address } = bitcoin.payments.p2pkh({
-    pubkey: publicKey,
-    network: TestNet,
-  });
-
-  let user = await apiDB.getData("/api/user", {
-    email: req.objects.data.email,
-  });
-
-  let data = {
-    id: user.uid,
-    address: address,
-    privatekey: privateKey,
-    publickey: publicKey,
-  };
-
+async function createWallet(req,res){
   try {
+    let newAddress =  await apiBlockCypher.createAddress();
+    let user = await apiDB.getData("/api/user", {
+      email: req.objects.data.email,
+    });
+
+    let data = {
+      id: user.uid,
+      address: newAddress.data.address,
+      privatekey: newAddress.data.private,
+      publickey: newAddress.data.public,
+      wif: newAddress.data.wif
+
+    };
     let result = await apiDB.create("/api/wallet", data);
-    res.json({ address: address });
+    res.json({ address: newAddress.data.address });
+
+    console.log(newAddress)
+    res.json(newAddress.data)
   } catch (error) {
-    res.status(400).json(error);
+    return res.status(400).json(error)
   }
-};
+}
+
+async function foundWalletEmail(req,res){
+  try {
+    let wallet = await apiDB.getData("/api/wallet", {
+      email: req.objects.data.email,
+    });
+
+    let tx  =  await apiBlockCypher.foundWallet(wallet.address,req.objects.data.amount)
+    res.json(tx)
+  } catch (error) {
+    return res.status(400).json(error)
+  }
+
+}
+
+async function getInfoWallet(req,res){
+  try {
+    let result = await apiBlockCypher.getInfoWallet(req.objects.data.address);
+    res.json(result)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}
+
+async function createTransfer(req,res){
+  try {
+    let result = await apiBlockCypher.createTransfer(req.objects.data.addressFrom,req.objects.data.addressTo,req.objects.data.amount);
+    res.json(result)
+  } catch (error) {
+    return error
+  }
+}
+
+
+module.exports= {
+  createWallet,
+  getInfoWallet,
+  foundWalletEmail,
+  createTransfer
+}
